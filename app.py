@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS
+# Custom CSS with Haitian flag styling
 st.markdown("""
 <style>
     @keyframes spin {
@@ -95,6 +95,7 @@ st.markdown("""
         margin-bottom: 30px;
         border: 1px solid gold;
         font-size: 14px;
+        position: relative;
     }
     .creator-bar span {
         color: #FFD700 !important;
@@ -147,7 +148,60 @@ st.markdown("""
         margin-top: 5px;
         font-style: italic;
     }
+    /* Haitian Flag styling */
+    .haitian-flag {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        width: 80px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+    .haitian-flag:hover {
+        transform: scale(1.05);
+    }
+    .flag-top {
+        background: #00209F;
+        height: 30px;
+    }
+    .flag-bottom {
+        background: #D21034;
+        height: 30px;
+    }
+    .flag-text {
+        text-align: center;
+        font-size: 8px;
+        background: white;
+        color: black;
+        padding: 2px;
+        font-weight: bold;
+    }
+    @media (max-width: 768px) {
+        .haitian-flag {
+            width: 50px;
+            top: 10px;
+            left: 10px;
+        }
+        .flag-top, .flag-bottom {
+            height: 20px;
+        }
+    }
 </style>
+""", unsafe_allow_html=True)
+
+# ---------------------------- HAITIAN FLAG (TOP LEFT) ----------------------------
+st.markdown("""
+<div class="haitian-flag" onclick="window.open('https://en.wikipedia.org/wiki/Haiti', '_blank')">
+    <div class="flag-top"></div>
+    <div class="flag-bottom"></div>
+    <div class="flag-text">🇭🇹 HAITI</div>
+</div>
 """, unsafe_allow_html=True)
 
 # ---------------------------- TEXT-TO-SPEECH FUNCTION ----------------------------
@@ -349,3 +403,4 @@ st.sidebar.markdown(f"**🎵 Total Songs:** {len(songs)}")
 st.sidebar.markdown("**🎤 AI Female Voice for EVERY song**")
 st.sidebar.markdown("**🎬 All YouTube Videos Working**")
 st.sidebar.markdown("**⭐ King of Pop Legacy**")
+st.sidebar.markdown("**🇭🇹 Proudly Presented from Haiti**")
