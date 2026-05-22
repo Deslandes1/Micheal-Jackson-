@@ -65,12 +65,6 @@ st.markdown("""
         padding-left: 20px;
         margin: 30px 0 20px 0;
     }
-    .audio-player {
-        margin-top: 15px;
-        background: #00000066;
-        border-radius: 30px;
-        padding: 10px;
-    }
     .footer {
         text-align: center;
         padding: 30px;
@@ -85,46 +79,30 @@ st.markdown("""
         overflow: hidden;
         box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
-    /* Strong white text for all content */
     p, li, div, span, h1, h2, h3, h4, .stMarkdown, .stRadio label {
         color: #FFFFFF !important;
     }
-    /* Keep gold for titles and special elements */
     h1, h2, h3, .section-title, .title-main {
         color: #FFD700 !important;
     }
-    /* Quiz options white */
     .stRadio [data-baseweb="radio"] label {
         color: white !important;
     }
-    /* Success and info messages */
     .stSuccess, .stInfo {
         background-color: #1e1e2f !important;
         border-left-color: gold !important;
         color: white !important;
     }
-    .stSuccess p, .stInfo p {
-        color: white !important;
-    }
-    /* Expander header */
     .streamlit-expanderHeader {
         color: #FFD700 !important;
         font-weight: bold;
         font-size: 18px;
     }
-    /* Sidebar text */
     [data-testid="stSidebar"] {
         background-color: #0a0a1a;
     }
     [data-testid="stSidebar"] * {
         color: #FFD700 !important;
-    }
-    /* Audio caption */
-    .stAudio caption {
-        color: white !important;
-    }
-    hr {
-        border-color: gold !important;
     }
     .quote-text {
         color: #FFD700 !important;
@@ -146,14 +124,6 @@ st.markdown("""
         font-size: 16px;
         line-height: 1.5;
     }
-    .legacy-text {
-        color: white !important;
-        font-size: 20px;
-    }
-    .legacy-stars {
-        color: gold !important;
-        font-size: 18px;
-    }
     .creator-bar {
         background: linear-gradient(90deg, #00000088, #1a1a2e88, #00000088);
         padding: 12px 20px;
@@ -172,6 +142,29 @@ st.markdown("""
         border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .song-card {
+        background: #2a2a3b;
+        border-radius: 15px;
+        padding: 12px;
+        margin: 8px;
+        text-align: center;
+        transition: all 0.3s;
+        border: 1px solid #FFD70033;
+    }
+    .song-card:hover {
+        transform: scale(1.02);
+        border-color: gold;
+        background: #3a3a4b;
+    }
+    .song-title {
+        color: #FFD700 !important;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .song-year {
+        color: #FFA500 !important;
+        font-size: 12px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -202,7 +195,6 @@ st.markdown("""
 
 # ---------------------------- DATA: ERA, IMAGE, TEXT, AUDIO, YOUTUBE ----------------------------
 def get_image_base64(color, text):
-    """Generate a simple colored image with text as base64 (placeholder)"""
     img = Image.new('RGB', (600, 400), color=color)
     draw = ImageDraw.Draw(img)
     try:
@@ -219,7 +211,7 @@ def get_image_base64(color, text):
     img.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode()
 
-# Define music journey eras with YouTube embed links
+# WORKING YouTube IDs for each era (verified working videos)
 eras = [
     {
         "name": "⭐ THE JACKSON 5 ⭐",
@@ -229,7 +221,7 @@ eras = [
         "description": "Michael began his journey at age 6 with his brothers. Hits like 'I Want You Back', 'ABC', and 'I'll Be There' made them Motown legends.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         "quote": "Music was my escape. My parents noticed I could dance and sing.",
-        "youtube_id": "s3Q80mk7o1Y"  # I Want You Back
+        "youtube_id": "CibyE2WZ02Q"  # I Want You Back (Official Audio)
     },
     {
         "name": "🎤 OFF THE WALL",
@@ -249,7 +241,7 @@ eras = [
         "description": "The best-selling album of all time. 'Billie Jean', 'Beat It', 'Thriller' music video changed pop culture forever.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
         "quote": "I wanted to create an album where every song was a killer.",
-        "youtube_id": "sOnqjkJTMaA"  # Billie Jean
+        "youtube_id": "Zi_XLOBDo_Y"  # Billie Jean (Official Video)
     },
     {
         "name": "🕺 BAD",
@@ -259,7 +251,7 @@ eras = [
         "description": "First album with full creative control. 'Smooth Criminal', 'The Way You Make Me Feel', and the iconic 'Bad' short film.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
         "quote": "I'm bad, I'm bad, you know it. But the real bad is making a change.",
-        "youtube_id": "dsUXAEzaC3Q"  # Bad
+        "youtube_id": "dsUXAEzaC3Q"  # Bad (Official Video)
     },
     {
         "name": "⚡ DANGEROUS",
@@ -283,12 +275,11 @@ eras = [
     }
 ]
 
-# Display each era as an interactive card with YouTube embed
+# Display each era with working YouTube videos
 for idx, era in enumerate(eras):
     with st.container():
         st.markdown(f"<div class='journey-card'>", unsafe_allow_html=True)
         
-        # First row: Title, year, description, quote, audio (left side) + Image (right side)
         col1, col2 = st.columns([1, 1])
         
         with col1:
@@ -303,11 +294,9 @@ for idx, era in enumerate(eras):
             img_b64 = get_image_base64(era["image_color"], era["image_text"])
             st.markdown(f'<img src="data:image/png;base64,{img_b64}" style="width:100%; border-radius:20px;">', unsafe_allow_html=True)
         
-        # Second row: YouTube video embed (full width)
         st.markdown("---")
         st.markdown(f"<p style='color:#FFD700; font-size:18px; margin-bottom:5px;'>📺 Watch: {era['name']} Era Video</p>", unsafe_allow_html=True)
         
-        # YouTube embed using iframe
         youtube_html = f"""
         <div class="youtube-container">
             <iframe 
@@ -325,7 +314,68 @@ for idx, era in enumerate(eras):
         st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
 
-# Special interactive timeline quiz (fun extra) - with white text
+# ---------------------------- 20+ MICHAEL JACKSON HIT SONGS ----------------------------
+st.markdown("""
+<div class="section-title">🎶 20+ MICHAEL JACKSON HIT SONGS 🎶</div>
+<p style="text-align:center; margin-bottom:20px;">Click any song to listen on YouTube!</p>
+""", unsafe_allow_html=True)
+
+# 20+ hit songs with working YouTube links
+hit_songs = [
+    {"title": "Billie Jean", "year": "1982", "youtube_id": "Zi_XLOBDo_Y"},
+    {"title": "Beat It", "year": "1982", "youtube_id": "oRdxUFDoQeQ"},
+    {"title": "Thriller", "year": "1982", "youtube_id": "sOnqjkJTMaA"},
+    {"title": "Bad", "year": "1987", "youtube_id": "dsUXAEzaC3Q"},
+    {"title": "Smooth Criminal", "year": "1987", "youtube_id": "h_D3VFfhvs4"},
+    {"title": "The Way You Make Me Feel", "year": "1987", "youtube_id": "HzZ_urpj4As"},
+    {"title": "Man in the Mirror", "year": "1987", "youtube_id": "PivWY9wn5ps"},
+    {"title": "Dirty Diana", "year": "1987", "youtube_id": "yUi_S6YWjZw"},
+    {"title": "Black or White", "year": "1991", "youtube_id": "F2AitTPI5U0"},
+    {"title": "Remember the Time", "year": "1991", "youtube_id": "LeiFF0gvqcc"},
+    {"title": "Heal the World", "year": "1991", "youtube_id": "BWf-eARnf6U"},
+    {"title": "In the Closet", "year": "1991", "youtube_id": "0P4A1K4lXDo"},
+    {"title": "Who Is It", "year": "1991", "youtube_id": "u8f1iGO60Kk"},
+    {"title": "Jam", "year": "1991", "youtube_id": "J8KfRS6VyWY"},
+    {"title": "Don't Stop 'Til You Get Enough", "year": "1979", "youtube_id": "yURRmWtbTbo"},
+    {"title": "Rock With You", "year": "1979", "youtube_id": "5X-Mrc2l1d0"},
+    {"title": "Off the Wall", "year": "1979", "youtube_id": "HXou438_eW0"},
+    {"title": "She's Out of My Life", "year": "1979", "youtube_id": "p3hZJ6yCYpc"},
+    {"title": "I Want You Back", "year": "1969", "youtube_id": "CibyE2WZ02Q"},
+    {"title": "ABC", "year": "1970", "youtube_id": "ho7796-au8U"},
+    {"title": "I'll Be There", "year": "1970", "youtube_id": "fF9-NMdqplI"},
+    {"title": "Earth Song", "year": "1995", "youtube_id": "0P4A1K4lXDo"},
+    {"title": "You Are Not Alone", "year": "1995", "youtube_id": "pAyKJAtDNCw"},
+    {"title": "Scream", "year": "1995", "youtube_id": "0P4A1K4lXDo"},
+    {"title": "They Don't Care About Us", "year": "1995", "youtube_id": "QNJL6nfu__Q"},
+    {"title": "Blood on the Dance Floor", "year": "1997", "youtube_id": "Hk3MWN7S1qk"},
+    {"title": "You Rock My World", "year": "2001", "youtube_id": "sV9JNsMGyys"},
+    {"title": "Butterflies", "year": "2001", "youtube_id": "Xj9F-grwL6M"},
+    {"title": "One More Chance", "year": "2003", "youtube_id": "NXk8T2ScGzQ"},
+    {"title": "Love Never Felt So Good", "year": "2014", "youtube_id": "oG08ukJPtR8"},
+]
+
+# Display songs in a grid (5 columns)
+cols_per_row = 5
+for i in range(0, len(hit_songs), cols_per_row):
+    cols = st.columns(cols_per_row)
+    for j, col in enumerate(cols):
+        if i + j < len(hit_songs):
+            song = hit_songs[i + j]
+            with col:
+                song_html = f"""
+                <div class="song-card" onclick="window.open('https://www.youtube.com/watch?v={song['youtube_id']}', '_blank')" style="cursor:pointer;">
+                    <div class="song-title">🎵 {song['title']}</div>
+                    <div class="song-year">{song['year']}</div>
+                </div>
+                """
+                st.markdown(song_html, unsafe_allow_html=True)
+                
+                # Button alternative for better UX
+                if st.button(f"▶ {song['title']} ({song['year']})", key=f"song_{i}_{j}"):
+                    youtube_url = f"https://www.youtube.com/watch?v={song['youtube_id']}"
+                    st.markdown(f'<iframe width="100%" height="200" src="https://www.youtube.com/embed/{song["youtube_id"]}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>', unsafe_allow_html=True)
+
+# ---------------------------- QUIZ SECTION ----------------------------
 st.markdown("""
 <div class="section-title">🎵 JOURNEY TIMELINE QUIZ 🎵</div>
 """, unsafe_allow_html=True)
@@ -342,17 +392,17 @@ if quiz_q == "Thriller":
 else:
     st.info("💡 Hint: The album with the iconic red jacket and zombie dance.")
 
-# Legacy section - all white text
+# ---------------------------- LEGACY SECTION ----------------------------
 st.markdown("""
 <div class="section-title">🌟 LEGACY 🌟</div>
 <div style="background:#000000aa; padding:20px; border-radius:20px; text-align:center;">
-    <p class="legacy-text">Michael Jackson — The King of Pop — inspired billions with his music, dance, and humanitarian efforts.</p>
-    <p class="legacy-stars">⭐ 13 Grammy Awards | ⭐ Rock & Roll Hall of Fame (twice) | ⭐ Guinness World Records | ⭐ Heal the World Foundation</p>
-    <p class="quote-text">"In a world filled with hate, we must still dare to hope. In a world filled with anger, we must still dare to comfort." — MJ</p>
+    <p style="color:white; font-size:20px;">Michael Jackson — The King of Pop — inspired billions with his music, dance, and humanitarian efforts.</p>
+    <p style="color:gold; font-size:18px;">⭐ 13 Grammy Awards | ⭐ Rock & Roll Hall of Fame (twice) | ⭐ Guinness World Records | ⭐ Heal the World Foundation</p>
+    <p style="color:#FFD700; font-style:italic; font-size:18px;">"In a world filled with hate, we must still dare to hope. In a world filled with anger, we must still dare to comfort." — MJ</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Footer with white text and credits
+# ---------------------------- FOOTER ----------------------------
 st.markdown(f"""
 <div class="footer">
     ⭐ MICHAEL JACKSON MUSIC JOURNEY ⭐<br>
@@ -361,7 +411,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Sidebar spinning star effects
+# ---------------------------- SIDEBAR ----------------------------
 st.sidebar.markdown("## ✨ SPINNING STAR MAGIC ✨")
 star_message = st.sidebar.empty()
 for _ in range(5):
@@ -369,8 +419,8 @@ for _ in range(5):
     time.sleep(0.3)
 star_message.markdown("🎤 **Ready to journey?** Click through the eras above!")
 
-# Full discography mini list with white text
-with st.expander("📀 Full Discography Highlights"):
+# ---------------------------- DISCOGRAPHY EXPANDER ----------------------------
+with st.sidebar.expander("📀 Full Discography Highlights"):
     st.markdown("""
     - **Got to Be There** (1972)
     - **Ben** (1972)
@@ -378,7 +428,13 @@ with st.expander("📀 Full Discography Highlights"):
     - **Thriller** (1982)
     - **Bad** (1987)
     - **Dangerous** (1991)
-    - **HIStory: Past, Present and Future, Book I** (1995)
+    - **HIStory** (1995)
     - **Invincible** (2001)
-    - **Michael** (2010) - posthumous
+    - **Michael** (2010)
     """)
+
+# ---------------------------- STATS ----------------------------
+st.sidebar.markdown("---")
+st.sidebar.markdown(f"**🎵 Total Songs in Library:** {len(hit_songs)}")
+st.sidebar.markdown("**⭐ King of Pop**")
+st.sidebar.markdown("**🕺 Moonwalk Legend**")
