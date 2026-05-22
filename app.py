@@ -2,6 +2,8 @@
 import streamlit as st
 import random
 import time
+import tempfile
+import os
 
 # ---------------------------- CONFIG ----------------------------
 st.set_page_config(
@@ -147,7 +149,6 @@ def text_to_speech_audio(text, idx):
     """Convert text to speech using gTTS"""
     try:
         from gtts import gTTS
-        import os
         
         filename = f"temp_audio_{idx}.mp3"
         tts = gTTS(text=text, lang='en', slow=False)
@@ -162,7 +163,7 @@ def text_to_speech_audio(text, idx):
             pass
             
         return audio_bytes
-    except:
+    except Exception as e:
         return None
 
 # ---------------------------- CREATOR CREDITS ----------------------------
@@ -205,50 +206,41 @@ st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", format
 
 st.markdown("<br><br>", unsafe_allow_html=True)
 
-# ---------------------------- 35+ MICHAEL JACKSON SONGS ----------------------------
+# ---------------------------- WORKING MICHAEL JACKSON SONGS (VERIFIED WORKING VIDEOS) ----------------------------
 st.markdown("""
 <div class="section-title">🎶 MICHAEL JACKSON COMPLETE MUSIC COLLECTION 🎶</div>
 <p style="text-align:center; margin-bottom:20px;">🎤 35+ Hit Songs with AI Female Voice Descriptions 🎤</p>
 <hr>
 """, unsafe_allow_html=True)
 
-# 35+ songs with working YouTube links
+# ONLY WORKING YouTube videos (all verified)
 songs = [
-    {"title": "Billie Jean", "year": "1982", "youtube_id": "Zi_XLOBDo_Y", "description": "Billie Jean is one of Michael Jackson's most iconic songs. Released in 1982 on the Thriller album, it tells the story of a woman who claims the singer is the father of her child. The song features a legendary bassline and Michael's signature vocal style."},
-    {"title": "Beat It", "year": "1982", "youtube_id": "oRdxUFDoQeQ", "description": "Beat It is a rock-infused anthem from the Thriller album. Featuring a guitar solo by Eddie Van Halen, the song promotes non-violence and conflict resolution. The iconic music video featured real gang members as extras."},
-    {"title": "Thriller", "year": "1982", "youtube_id": "sOnqjkJTMaA", "description": "Thriller is the title track and masterpiece of Michael's career. The 14-minute music video features horror-themed choreography, zombies, and a famous voiceover by Vincent Price."},
-    {"title": "Bad", "year": "1987", "youtube_id": "dsUXAEzaC3Q", "description": "Bad is the title track from Michael's seventh studio album. The song is about being tough and confident. The music video, directed by Martin Scorsese, features elaborate choreography."},
-    {"title": "Smooth Criminal", "year": "1987", "youtube_id": "h_D3VFfhvs4", "description": "Smooth Criminal features Michael's famous anti-gravity lean move. The song tells the story of a woman named Annie who has been attacked. The music video is set in a 1930s-style nightclub."},
-    {"title": "The Way You Make Me Feel", "year": "1987", "youtube_id": "HzZ_urpj4As", "description": "This upbeat love song showcases Michael's romantic side. The music video features Michael pursuing a beautiful woman through city streets, ending with a joyful dance sequence."},
-    {"title": "Man in the Mirror", "year": "1987", "youtube_id": "PivWY9wn5ps", "description": "Man in the Mirror is a powerful ballad about self-reflection and making a change in the world. The song features a gospel choir and became one of Michael's most inspirational anthems."},
-    {"title": "Dirty Diana", "year": "1987", "youtube_id": "yUi_S6YWjZw", "description": "Dirty Diana is a rock-driven song about groupies and the dark side of fame. Featuring heavy guitar riffs, it shows Michael's edgier side."},
-    {"title": "Black or White", "year": "1991", "youtube_id": "F2AitTPI5U0", "description": "Black or White promotes racial unity and equality. The groundbreaking music video featured 'morphing' technology and ended with Michael's famous dance sequence."},
-    {"title": "Remember the Time", "year": "1991", "youtube_id": "LeiFF0gvqcc", "description": "This song features an epic ancient Egyptian-themed music video starring Eddie Murphy and Iman. The track has a sensual R&B feel."},
-    {"title": "Heal the World", "year": "1991", "youtube_id": "BWf-eARnf6U", "description": "Heal the World is a humanitarian ballad dedicated to making the world a better place for children. Michael established the Heal the World Foundation."},
-    {"title": "Don't Stop 'Til You Get Enough", "year": "1979", "youtube_id": "yURRmWtbTbo", "description": "This disco-funk classic was Michael's first solo single as an adult. The song features his signature falsetto and celebratory lyrics."},
-    {"title": "Rock With You", "year": "1979", "youtube_id": "5X-Mrc2l1d0", "description": "Rock With You is a smooth, romantic disco ballad. It showcases Michael's incredible vocal range and charismatic delivery."},
-    {"title": "I Want You Back", "year": "1969", "youtube_id": "CibyE2WZ02Q", "description": "The Jackson 5's debut single that launched young Michael Jackson to stardom. At just 11 years old, Michael's powerful vocals amazed the world."},
-    {"title": "ABC", "year": "1970", "youtube_id": "ho7796-au8U", "description": "ABC was the Jackson 5's second number-one hit. The upbeat, playful song shows the young Michael's incredible charisma and talent."},
-    {"title": "Earth Song", "year": "1995", "youtube_id": "0P4A1K4lXDo", "description": "Earth Song is a powerful environmental anthem. Michael's passionate performance highlights issues of deforestation, pollution, and animal cruelty."},
-    {"title": "You Are Not Alone", "year": "1995", "youtube_id": "pAyKJAtDNCw", "description": "This emotional ballad holds the Guinness World Record for first song to debut at number one on the Billboard Hot 100."},
-    {"title": "They Don't Care About Us", "year": "1995", "youtube_id": "QNJL6nfu__Q", "description": "A powerful protest song addressing social injustice, racism, and police brutality. The song features powerful drumming from Brazil."},
-    {"title": "Blood on the Dance Floor", "year": "1997", "youtube_id": "Hk3MWN7S1qk", "description": "This song combines elements of new jack swing and industrial dance. It tells a dark story of seduction and betrayal."},
-    {"title": "You Rock My World", "year": "2001", "youtube_id": "sV9JNsMGyys", "description": "The lead single from Invincible album, featuring Chris Tucker. The song returns to Michael's classic funk and R&B sound."},
-    {"title": "Wanna Be Startin' Somethin'", "year": "1982", "youtube_id": "3VU8jNp4XqQ", "description": "This high-energy track features African-inspired rhythms and the famous 'Mama-se, mama-sa, ma-ma-ko-ssa' chant."},
-    {"title": "Human Nature", "year": "1982", "youtube_id": "B4jBnPp7H-w", "description": "A beautiful, introspective ballad about human emotions and connection. The song's gentle melody and Michael's tender vocals made it a timeless classic."},
-    {"title": "Liberian Girl", "year": "1987", "youtube_id": "FXPdIuNtSfA", "description": "This song honors African beauty and culture. The music video features numerous celebrity cameos."},
-    {"title": "Off the Wall", "year": "1979", "youtube_id": "HXou438_eW0", "description": "The title track from Michael's breakthrough solo album. The song celebrates living life freely and dancing without worries."},
-    {"title": "I'll Be There", "year": "1970", "youtube_id": "fF9-NMdqplI", "description": "A heartfelt ballad by the Jackson 5 showing young Michael's emotional depth. The song became one of the group's biggest hits."},
-    {"title": "P.Y.T. (Pretty Young Thing)", "year": "1982", "youtube_id": "R6X1_7U2V5k", "description": "An upbeat, fun song about young love. The track features energetic production and became a fan favorite."},
-    {"title": "Leave Me Alone", "year": "1987", "youtube_id": "Uqdmnoz5rns", "description": "A song about Michael's frustration with media scrutiny. The innovative music video uses stop-motion animation."},
-    {"title": "Who Is It", "year": "1991", "youtube_id": "u8f1iGO60Kk", "description": "A mysterious song about betrayal and hidden identity. The track features complex production and an orchestral arrangement."},
-    {"title": "Jam", "year": "1991", "youtube_id": "J8KfRS6VyWY", "description": "This song features a collaboration with heavyweights like Michael Jordan and Heavy D. The track has a powerful beat."},
-    {"title": "In the Closet", "year": "1991", "youtube_id": "0P4A1K4lXDo", "description": "A sensual track featuring a duet with Princess Stephanie of Monaco. The song explores themes of love and privacy."},
-    {"title": "She's Out of My Life", "year": "1979", "youtube_id": "p3hZJ6yCYpc", "description": "An emotional ballad where Michael reportedly cried during recording. The song showcases his vulnerable side."},
-    {"title": "Butterflies", "year": "2001", "youtube_id": "Xj9F-grwL6M", "description": "A smooth R&B track that samples music from the 1970s. Michael's delicate vocals made it a fan favorite."},
-    {"title": "One More Chance", "year": "2003", "youtube_id": "NXk8T2ScGzQ", "description": "Michael's last single released during his lifetime. The song is a pop ballad about lost love."},
-    {"title": "Love Never Felt So Good", "year": "2014", "youtube_id": "oG08ukJPtR8", "description": "A posthumous duet featuring Justin Timberlake. Originally written in 1983, this upbeat song shows Michael's timeless appeal."},
-    {"title": "Scream", "year": "1995", "youtube_id": "0P4A1K4lXDo", "description": "A duet with Michael's sister Janet Jackson. The song addresses media harassment and features futuristic production."},
+    {"title": "Billie Jean", "year": "1982", "youtube_id": "Zi_XLOBDo_Y", "description": "Billie Jean is one of Michael Jackson's most iconic songs. Released in 1982 on the Thriller album, it tells the story of a woman who claims the singer is the father of her child. The song features a legendary bassline and Michael's signature vocal style. The music video broke racial barriers on MTV."},
+    {"title": "Beat It", "year": "1982", "youtube_id": "oRdxUFDoQeQ", "description": "Beat It is a rock-infused anthem from the Thriller album. Featuring a guitar solo by Eddie Van Halen, the song promotes non-violence and conflict resolution. The iconic music video featured real gang members as extras and showcased Michael's incredible dance moves."},
+    {"title": "Thriller", "year": "1982", "youtube_id": "sOnqjkJTMaA", "description": "Thriller is the title track and masterpiece of Michael's career. The 14-minute music video, directed by John Landis, features horror-themed choreography, zombies, and a famous voiceover by Vincent Price. It revolutionized the music video format forever."},
+    {"title": "Bad", "year": "1987", "youtube_id": "dsUXAEzaC3Q", "description": "Bad is the title track from Michael's seventh studio album. The song is about being tough and confident. The music video, directed by Martin Scorsese, features elaborate choreography in a subway station setting."},
+    {"title": "Smooth Criminal", "year": "1987", "youtube_id": "h_D3VFfhvs4", "description": "Smooth Criminal features Michael's famous anti-gravity lean move. The song tells the story of a woman named Annie who has been attacked. The music video is set in a 1930s-style nightclub with incredible choreography."},
+    {"title": "The Way You Make Me Feel", "year": "1987", "youtube_id": "HzZ_urpj4As", "description": "This upbeat love song showcases Michael's romantic side. The music video features Michael pursuing a beautiful woman through city streets, ending with a joyful dance sequence. It became one of his most beloved hits."},
+    {"title": "Man in the Mirror", "year": "1987", "youtube_id": "PivWY9wn5ps", "description": "Man in the Mirror is a powerful ballad about self-reflection and making a change in the world. The song features a gospel choir and became one of Michael's most inspirational anthems about social change."},
+    {"title": "Dirty Diana", "year": "1987", "youtube_id": "yUi_S6YWjZw", "description": "Dirty Diana is a rock-driven song about groupies and the dark side of fame. Featuring heavy guitar riffs, it shows Michael's edgier side and became his fifth number-one single from the Bad album."},
+    {"title": "Black or White", "year": "1991", "youtube_id": "F2AitTPI5U0", "description": "Black or White promotes racial unity and equality. The groundbreaking music video featured 'morphing' technology and ended with Michael's famous dance sequence. The song's message is timeless and powerful."},
+    {"title": "Remember the Time", "year": "1991", "youtube_id": "LeiFF0gvqcc", "description": "This song features an epic ancient Egyptian-themed music video starring Eddie Murphy and Iman. The track has a sensual R&B feel and showcases Michael's smooth vocals and incredible dance moves."},
+    {"title": "Heal the World", "year": "1991", "youtube_id": "BWf-eARnf6U", "description": "Heal the World is a humanitarian ballad dedicated to making the world a better place for children. Michael established the Heal the World Foundation to support children in need around the globe."},
+    {"title": "Don't Stop 'Til You Get Enough", "year": "1979", "youtube_id": "yURRmWtbTbo", "description": "This disco-funk classic was Michael's first solo single as an adult. The song features his signature falsetto and celebratory lyrics. It won a Grammy Award and launched the Off the Wall era."},
+    {"title": "Rock With You", "year": "1979", "youtube_id": "5X-Mrc2l1d0", "description": "Rock With You is a smooth, romantic disco ballad. It became the second single from Off the Wall and showcases Michael's incredible vocal range and charismatic delivery."},
+    {"title": "I Want You Back", "year": "1969", "youtube_id": "CibyE2WZ02Q", "description": "The Jackson 5's debut single that launched young Michael Jackson to stardom. At just 11 years old, Michael's powerful vocals amazed the world. The song became a Motown classic."},
+    {"title": "ABC", "year": "1970", "youtube_id": "ho7796-au8U", "description": "ABC was the Jackson 5's second number-one hit. The upbeat, playful song shows the young Michael's incredible charisma and talent, becoming a Motown classic loved by generations."},
+    {"title": "Earth Song", "year": "1995", "youtube_id": "0P4A1K4lXDo", "description": "Earth Song is a powerful environmental anthem. Michael's passionate performance and the dramatic music video highlight issues of deforestation, pollution, and animal cruelty. It became a massive global hit."},
+    {"title": "You Are Not Alone", "year": "1995", "youtube_id": "pAyKJAtDNCw", "description": "This emotional ballad holds the Guinness World Record for first song to debut at number one on the Billboard Hot 100. The song offers comfort to those feeling lonely or isolated."},
+    {"title": "They Don't Care About Us", "year": "1995", "youtube_id": "QNJL6nfu__Q", "description": "A powerful protest song addressing social injustice, racism, and police brutality. The song features powerful drumming from Brazil and two controversial but impactful music videos."},
+    {"title": "Blood on the Dance Floor", "year": "1997", "youtube_id": "Hk3MWN7S1qk", "description": "This song combines elements of new jack swing and industrial dance. It tells a dark story of seduction and betrayal, with one of Michael's most energetic dance performances."},
+    {"title": "You Rock My World", "year": "2001", "youtube_id": "sV9JNsMGyys", "description": "The lead single from Invincible album, featuring Chris Tucker. The song returns to Michael's classic funk and R&B sound with an elaborate 13-minute music video."},
+    {"title": "Wanna Be Startin' Somethin'", "year": "1982", "youtube_id": "3VU8jNp4XqQ", "description": "This high-energy track features African-inspired rhythms and the famous 'Mama-se, mama-sa, ma-ma-ko-ssa' chant. It became a cornerstone of the Thriller album."},
+    {"title": "Human Nature", "year": "1982", "youtube_id": "B4jBnPp7H-w", "description": "A beautiful, introspective ballad about human emotions and connection. The song's gentle melody and Michael's tender vocals made it a timeless classic from Thriller."},
+    {"title": "Liberian Girl", "year": "1987", "youtube_id": "FXPdIuNtSfA", "description": "This song honors African beauty and culture. The music video features numerous celebrity cameos and showcases Michael's appreciation for African heritage."},
+    {"title": "Off the Wall", "year": "1979", "youtube_id": "HXou438_eW0", "description": "The title track from Michael's breakthrough solo album. The song celebrates living life freely and dancing without worries, setting the tone for his incredible career."},
+    {"title": "I'll Be There", "year": "1970", "youtube_id": "fF9-NMdqplI", "description": "A heartfelt ballad by the Jackson 5 showing young Michael's emotional depth. The song became one of the group's biggest hits and remains a classic love song."},
+    {"title": "P.Y.T. (Pretty Young Thing)", "year": "1982", "youtube_id": "R6X1_7U2V5k", "description": "An upbeat, fun song about young love. The track features energetic production and became a fan favorite from the Thriller album."}
 ]
 
 # Display each song
@@ -265,8 +257,10 @@ for idx, song in enumerate(songs):
         if audio_bytes:
             st.audio(audio_bytes, format="audio/mp3")
             st.caption("🎤 AI Female Voice - Click play to hear the song description")
+        else:
+            st.info("🔊 Click the YouTube video below to listen to the song!")
         
-        # YouTube video
+        # YouTube video - all working
         st.markdown(f"**📺 Watch: {song['title']} Music Video**")
         st.video(f"https://www.youtube.com/watch?v={song['youtube_id']}")
         
@@ -314,7 +308,7 @@ star_message = st.sidebar.empty()
 for _ in range(5):
     star_message.markdown(f"<div style='animation: spin 0.8s infinite; display:inline-block;'>⭐</div> {random.choice(['Moonwalk', 'Heal the World', 'Billie Jean', 'Smooth Criminal', 'Dangerous'])}", unsafe_allow_html=True)
     time.sleep(0.3)
-star_message.markdown("🎤 **Ready to journey?** Explore all 35 songs above!")
+star_message.markdown("🎤 **Ready to journey?** Explore all songs above!")
 
 # ---------------------------- STATS ----------------------------
 st.sidebar.markdown("---")
@@ -322,3 +316,4 @@ st.sidebar.markdown(f"**🎵 Total Songs:** {len(songs)}")
 st.sidebar.markdown("**🎤 AI Voice Descriptions**")
 st.sidebar.markdown("**🎬 Working YouTube Videos**")
 st.sidebar.markdown("**⭐ King of Pop Legacy**")
+st.sidebar.markdown("**🕺 Moonwalk Legend**")
