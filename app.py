@@ -5,7 +5,6 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import random
 import time
-import pyttsx3
 import tempfile
 import os
 
@@ -139,40 +138,44 @@ st.markdown("""
         line-height: 1.5;
         margin: 15px 0;
     }
-    .ai-voice-btn {
-        background: linear-gradient(90deg, #FFD700, #FFA500);
-        color: black;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 30px;
-        font-weight: bold;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-    hr {
-        border-color: gold;
-    }
     .mj-image {
         border-radius: 20px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         width: 100%;
         object-fit: cover;
     }
+    hr {
+        border-color: gold;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------------------- TEXT-TO-SPEECH FUNCTION ----------------------------
-def text_to_speech_audio(text, filename="speech.mp3"):
+# ---------------------------- TEXT-TO-SPEECH FUNCTION (using gTTS) ----------------------------
+def text_to_speech_audio(text, idx):
     """Convert text to speech using gTTS (Google Text-to-Speech) - female voice"""
     try:
         from gtts import gTTS
         import os
         
+        # Create a unique filename
+        filename = f"temp_audio_{idx}.mp3"
+        
+        # Generate speech
         tts = gTTS(text=text, lang='en', slow=False)
         tts.save(filename)
-        return filename
-    except:
-        # Fallback: use a base64 encoded placeholder if gTTS not available
+        
+        # Read the audio file
+        with open(filename, "rb") as f:
+            audio_bytes = f.read()
+        
+        # Clean up temp file
+        try:
+            os.remove(filename)
+        except:
+            pass
+            
+        return audio_bytes
+    except Exception as e:
         return None
 
 # ---------------------------- CREATOR CREDITS ----------------------------
@@ -282,20 +285,12 @@ for idx, song in enumerate(songs):
             st.markdown(f"<p class='song-desc'>{song['description']}</p>", unsafe_allow_html=True)
             
             # AI Voice button and audio player
-            audio_file = text_to_speech_audio(song['description'], f"temp_{idx}.mp3")
-            if audio_file and os.path.exists(audio_file):
-                with open(audio_file, "rb") as f:
-                    audio_bytes = f.read()
+            audio_bytes = text_to_speech_audio(song['description'], idx)
+            if audio_bytes:
                 st.audio(audio_bytes, format="audio/mp3")
                 st.caption("🎤 AI Female Voice - Click play to hear the song description")
-                # Clean up temp file after use
-                try:
-                    os.remove(audio_file)
-                except:
-                    pass
             else:
-                # Fallback: instruction to install gTTS
-                st.warning("💡 Install gTTS for AI voice: `pip install gtts`")
+                st.info("🔊 Click the YouTube video below to listen to the song!")
         
         with col2:
             # Display Michael Jackson image
