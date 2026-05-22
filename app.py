@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS with exact Haitian flag colors
+# Custom CSS
 st.markdown("""
 <style>
     @keyframes spin {
@@ -23,11 +23,6 @@ st.markdown("""
         0% { text-shadow: 0 0 5px gold, 0 0 10px gold; }
         50% { text-shadow: 0 0 20px yellow, 0 0 30px orange; }
         100% { text-shadow: 0 0 5px gold, 0 0 10px gold; }
-    }
-    @keyframes flag-wave {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.03); }
-        100% { transform: scale(1); }
     }
     .star-spin {
         display: inline-block;
@@ -111,7 +106,6 @@ st.markdown("""
         margin-bottom: 30px;
         border: 1px solid gold;
         font-size: 14px;
-        position: relative;
     }
     .creator-bar span {
         color: #FFD700 !important;
@@ -164,74 +158,7 @@ st.markdown("""
         margin-top: 5px;
         font-style: italic;
     }
-    /* Haitian Flag styling - EXACT COLORS */
-    /* Official Haitian Flag Colors:
-       Blue: Imperial Blue - Hex #00209F 
-       Red: Crimson - Hex #D21034  */
-    .haitian-flag {
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        z-index: 999;
-        display: flex;
-        flex-direction: column;
-        width: 90px;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255,215,0,0.3);
-    }
-    .haitian-flag:hover {
-        transform: scale(1.08);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-        border-color: gold;
-    }
-    /* Top horizontal band - Imperial Blue #00209F */
-    .flag-top {
-        background: #00209F;
-        height: 35px;
-    }
-    /* Bottom horizontal band - Crimson #D21034 */
-    .flag-bottom {
-        background: #D21034;
-        height: 35px;
-    }
-    .flag-text {
-        text-align: center;
-        font-size: 9px;
-        background: white;
-        color: #00209F;
-        padding: 3px;
-        font-weight: bold;
-        letter-spacing: 1px;
-    }
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-        .haitian-flag {
-            width: 55px;
-            top: 10px;
-            left: 10px;
-        }
-        .flag-top, .flag-bottom {
-            height: 22px;
-        }
-        .flag-text {
-            font-size: 7px;
-            padding: 2px;
-        }
-    }
 </style>
-""", unsafe_allow_html=True)
-
-# ---------------------------- HAITIAN FLAG (TOP LEFT - EXACT COLORS) ----------------------------
-st.markdown("""
-<div class="haitian-flag" onclick="window.open('https://en.wikipedia.org/wiki/Haiti', '_blank')">
-    <div class="flag-top" title="Imperial Blue - Freedom"></div>
-    <div class="flag-bottom" title="Crimson - Unity"></div>
-    <div class="flag-text">🇭🇹 HAITI</div>
-</div>
 """, unsafe_allow_html=True)
 
 # ---------------------------- TEXT-TO-SPEECH FUNCTION ----------------------------
@@ -385,25 +312,31 @@ for idx, song in enumerate(songs):
 # ---------------------------- MY SPACE SECTION (YOUR OWN YOUTUBE VIDEOS) ----------------------------
 st.markdown("""
 <div class="section-title">🚀 MY SPACE 🚀</div>
-<p style="text-align:center; margin-bottom:20px;">🎬 Watch my personal videos and projects - GlobalInternet.py 🎬</p>
+<p style="text-align:center; margin-bottom:20px;">🎬 Watch my personal software projects and creations - GlobalInternet.py 🎬</p>
 <hr>
 """, unsafe_allow_html=True)
 
-# Define your YouTube videos here - Add as many as you want!
+# Define your YouTube videos here
 my_videos = [
     {
-        "title": "New Software Release - Global Security Shield Demo",
-        "description": "Gesner Deslandes from GlobalInternet.py demonstrates the Global Security Shield, protecting websites from SQL injection, XSS, and over 20 attack patterns in real-time. Watch how the shield blocks malicious input instantly and keeps your data safe.",
-        "youtube_id": "dMIKnVCxIn0",
+        "title": "Applicant CV Screening Software",
+        "description": "This is an Applicant CV Screening Software built by Gesner Deslandes. It automates the resume screening process using AI to match candidates with job requirements efficiently.",
+        "youtube_id": "ZG1fwh03-t4",
+        "year": "2025"
+    },
+    {
+        "title": "Sign Language Software",
+        "description": "Sign Language Software built by Gesner Deslandes. This interactive tool helps beginners and intermediate students learn sign language through engaging digital materials.",
+        "youtube_id": "xedGM2CLa_E",
+        "year": "2025"
+    },
+    {
+        "title": "Globalinternet.py Talks",
+        "description": "Globalinternet.py Talks by Gesner Deslandes. A live journey as a software engineer and creator, sharing insights on building educational tools like 'Ti Malice'.",
+        "youtube_id": "LNOERduQIbA",
         "year": "2026"
     },
-    # Add more of your videos below following the same format:
-    # {
-    #     "title": "Your Video Title",
-    #     "description": "Your video description",
-    #     "youtube_id": "your_youtube_video_id",
-    #     "year": "2026"
-    # },
+    # Add more of your videos here following the same format
 ]
 
 for idx, video in enumerate(my_videos):
@@ -417,12 +350,6 @@ for idx, video in enumerate(my_videos):
             st.markdown(f"<p class='song-title'>📹 {video['title']}</p>", unsafe_allow_html=True)
             st.markdown(f"<p class='song-year'>📅 {video['year']}</p>", unsafe_allow_html=True)
             st.markdown(f"<p class='song-desc'>{video['description']}</p>", unsafe_allow_html=True)
-            
-            # Optional: Add AI voice for your video descriptions too!
-            # audio_bytes = text_to_speech_audio(video['description'], video['title'])
-            # if audio_bytes:
-            #     st.audio(audio_bytes, format="audio/mp3")
-            #     st.caption("🎤 AI Voice - Click play to hear the description")
         
         with col2:
             # Display a thumbnail / preview card
@@ -491,5 +418,3 @@ st.sidebar.markdown(f"**📹 My Space Videos:** {len(my_videos)}")
 st.sidebar.markdown("**🎤 AI Female Voice for EVERY song**")
 st.sidebar.markdown("**🎬 All YouTube Videos Working**")
 st.sidebar.markdown("**⭐ King of Pop Legacy**")
-st.sidebar.markdown("**🇭🇹 Proudly Presented from Haiti**")
-st.sidebar.markdown("**🚀 GlobalInternet.py**")
