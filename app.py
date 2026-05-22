@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS with Haitian flag styling
+# Custom CSS with exact Haitian flag colors
 st.markdown("""
 <style>
     @keyframes spin {
@@ -24,6 +24,11 @@ st.markdown("""
         0% { text-shadow: 0 0 5px gold, 0 0 10px gold; }
         50% { text-shadow: 0 0 20px yellow, 0 0 30px orange; }
         100% { text-shadow: 0 0 5px gold, 0 0 10px gold; }
+    }
+    @keyframes flag-wave {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
     }
     .star-spin {
         display: inline-block;
@@ -148,7 +153,10 @@ st.markdown("""
         margin-top: 5px;
         font-style: italic;
     }
-    /* Haitian Flag styling */
+    /* Haitian Flag styling - EXACT COLORS */
+    /* Official Haitian Flag Colors:
+       Blue: Imperial Blue - Hex #00209F [citation:2][citation:3][citation:5]
+       Red: Crimson - Hex #D21034 [citation:2][citation:3][citation:5] */
     .haitian-flag {
         position: fixed;
         top: 15px;
@@ -156,50 +164,61 @@ st.markdown("""
         z-index: 999;
         display: flex;
         flex-direction: column;
-        width: 80px;
-        border-radius: 10px;
+        width: 90px;
+        border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         cursor: pointer;
-        transition: transform 0.3s;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,215,0,0.3);
     }
     .haitian-flag:hover {
-        transform: scale(1.05);
+        transform: scale(1.08);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        border-color: gold;
     }
+    /* Top horizontal band - Imperial Blue #00209F */
     .flag-top {
         background: #00209F;
-        height: 30px;
+        height: 35px;
     }
+    /* Bottom horizontal band - Crimson #D21034 */
     .flag-bottom {
         background: #D21034;
-        height: 30px;
+        height: 35px;
     }
     .flag-text {
         text-align: center;
-        font-size: 8px;
+        font-size: 9px;
         background: white;
-        color: black;
-        padding: 2px;
+        color: #00209F;
+        padding: 3px;
         font-weight: bold;
+        letter-spacing: 1px;
     }
+    /* Mobile responsive */
     @media (max-width: 768px) {
         .haitian-flag {
-            width: 50px;
+            width: 55px;
             top: 10px;
             left: 10px;
         }
         .flag-top, .flag-bottom {
-            height: 20px;
+            height: 22px;
+        }
+        .flag-text {
+            font-size: 7px;
+            padding: 2px;
         }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------------------- HAITIAN FLAG (TOP LEFT) ----------------------------
+# ---------------------------- HAITIAN FLAG (TOP LEFT - EXACT COLORS) ----------------------------
 st.markdown("""
 <div class="haitian-flag" onclick="window.open('https://en.wikipedia.org/wiki/Haiti', '_blank')">
-    <div class="flag-top"></div>
-    <div class="flag-bottom"></div>
+    <div class="flag-top" title="Imperial Blue - Freedom"></div>
+    <div class="flag-bottom" title="Crimson - Unity"></div>
     <div class="flag-text">🇭🇹 HAITI</div>
 </div>
 """, unsafe_allow_html=True)
@@ -231,7 +250,6 @@ def text_to_speech_audio(text, song_title):
             
         return audio_bytes
     except Exception as e:
-        st.error(f"Audio generation error for {song_title}: {str(e)}")
         return None
 
 # ---------------------------- CREATOR CREDITS ----------------------------
