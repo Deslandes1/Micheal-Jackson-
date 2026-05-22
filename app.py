@@ -137,12 +137,6 @@ st.markdown("""
         color: #FFD700 !important;
         font-weight: bold;
     }
-    .youtube-container {
-        margin: 15px 0;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
     .song-card {
         background: #2a2a3b;
         border-radius: 15px;
@@ -151,6 +145,7 @@ st.markdown("""
         text-align: center;
         transition: all 0.3s;
         border: 1px solid #FFD70033;
+        cursor: pointer;
     }
     .song-card:hover {
         transform: scale(1.02);
@@ -193,7 +188,7 @@ st.markdown("""
 <hr style="border:1px solid gold; width:60%;">
 """, unsafe_allow_html=True)
 
-# ---------------------------- DATA: ERA, IMAGE, TEXT, AUDIO, YOUTUBE ----------------------------
+# ---------------------------- DATA: ERA, IMAGE, TEXT, AUDIO ----------------------------
 def get_image_base64(color, text):
     img = Image.new('RGB', (600, 400), color=color)
     draw = ImageDraw.Draw(img)
@@ -211,7 +206,7 @@ def get_image_base64(color, text):
     img.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode()
 
-# WORKING YouTube IDs for each era (verified working videos)
+# Define music journey eras (no YouTube videos)
 eras = [
     {
         "name": "⭐ THE JACKSON 5 ⭐",
@@ -220,8 +215,7 @@ eras = [
         "image_text": "Jackson 5 Era",
         "description": "Michael began his journey at age 6 with his brothers. Hits like 'I Want You Back', 'ABC', and 'I'll Be There' made them Motown legends.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        "quote": "Music was my escape. My parents noticed I could dance and sing.",
-        "youtube_id": "CibyE2WZ02Q"  # I Want You Back (Official Audio)
+        "quote": "Music was my escape. My parents noticed I could dance and sing."
     },
     {
         "name": "🎤 OFF THE WALL",
@@ -230,8 +224,7 @@ eras = [
         "image_text": "Off The Wall",
         "description": "His first adult solo album with Quincy Jones. 'Don't Stop 'Til You Get Enough' and 'Rock With You' became disco-funk masterpieces.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-        "quote": "When I dance, I feel free. Off The Wall was my declaration.",
-        "youtube_id": "yURRmWtbTbo"  # Don't Stop 'Til You Get Enough
+        "quote": "When I dance, I feel free. Off The Wall was my declaration."
     },
     {
         "name": "🌍 THRILLER",
@@ -240,8 +233,7 @@ eras = [
         "image_text": "Thriller",
         "description": "The best-selling album of all time. 'Billie Jean', 'Beat It', 'Thriller' music video changed pop culture forever.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-        "quote": "I wanted to create an album where every song was a killer.",
-        "youtube_id": "Zi_XLOBDo_Y"  # Billie Jean (Official Video)
+        "quote": "I wanted to create an album where every song was a killer."
     },
     {
         "name": "🕺 BAD",
@@ -250,8 +242,7 @@ eras = [
         "image_text": "Bad Era",
         "description": "First album with full creative control. 'Smooth Criminal', 'The Way You Make Me Feel', and the iconic 'Bad' short film.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-        "quote": "I'm bad, I'm bad, you know it. But the real bad is making a change.",
-        "youtube_id": "dsUXAEzaC3Q"  # Bad (Official Video)
+        "quote": "I'm bad, I'm bad, you know it. But the real bad is making a change."
     },
     {
         "name": "⚡ DANGEROUS",
@@ -260,8 +251,7 @@ eras = [
         "image_text": "Dangerous",
         "description": "Incorporated New Jack Swing. 'Black or White', 'Remember the Time', 'Heal the World' - a message of unity.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
-        "quote": "Heal the world, make it a better place for you and for me.",
-        "youtube_id": "F2AitTPI5U0"  # Black or White
+        "quote": "Heal the world, make it a better place for you and for me."
     },
     {
         "name": "👑 HIStory",
@@ -270,12 +260,11 @@ eras = [
         "image_text": "HIStory",
         "description": "Double album. 'Scream' duet with Janet, 'Earth Song', 'You Are Not Alone' - introspective and powerful.",
         "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-        "quote": "Tell me what has become of my life? But my legacy is HIStory.",
-        "youtube_id": "0P4A1K4lXDo"  # Earth Song
+        "quote": "Tell me what has become of my life? But my legacy is HIStory."
     }
 ]
 
-# Display each era with working YouTube videos
+# Display each era (no YouTube videos)
 for idx, era in enumerate(eras):
     with st.container():
         st.markdown(f"<div class='journey-card'>", unsafe_allow_html=True)
@@ -294,33 +283,16 @@ for idx, era in enumerate(eras):
             img_b64 = get_image_base64(era["image_color"], era["image_text"])
             st.markdown(f'<img src="data:image/png;base64,{img_b64}" style="width:100%; border-radius:20px;">', unsafe_allow_html=True)
         
-        st.markdown("---")
-        st.markdown(f"<p style='color:#FFD700; font-size:18px; margin-bottom:5px;'>📺 Watch: {era['name']} Era Video</p>", unsafe_allow_html=True)
-        
-        youtube_html = f"""
-        <div class="youtube-container">
-            <iframe 
-                width="100%" 
-                height="400" 
-                src="https://www.youtube.com/embed/{era['youtube_id']}?autoplay=0&rel=0" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-        </div>
-        """
-        st.markdown(youtube_html, unsafe_allow_html=True)
-        
         st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
 
-# ---------------------------- 20+ MICHAEL JACKSON HIT SONGS ----------------------------
+# ---------------------------- 30+ MICHAEL JACKSON HIT SONGS ----------------------------
 st.markdown("""
-<div class="section-title">🎶 20+ MICHAEL JACKSON HIT SONGS 🎶</div>
+<div class="section-title">🎶 30+ MICHAEL JACKSON HIT SONGS 🎶</div>
 <p style="text-align:center; margin-bottom:20px;">Click any song to listen on YouTube!</p>
 """, unsafe_allow_html=True)
 
-# 20+ hit songs with working YouTube links
+# 30+ hit songs with working YouTube links
 hit_songs = [
     {"title": "Billie Jean", "year": "1982", "youtube_id": "Zi_XLOBDo_Y"},
     {"title": "Beat It", "year": "1982", "youtube_id": "oRdxUFDoQeQ"},
@@ -352,28 +324,23 @@ hit_songs = [
     {"title": "Butterflies", "year": "2001", "youtube_id": "Xj9F-grwL6M"},
     {"title": "One More Chance", "year": "2003", "youtube_id": "NXk8T2ScGzQ"},
     {"title": "Love Never Felt So Good", "year": "2014", "youtube_id": "oG08ukJPtR8"},
+    {"title": "Wanna Be Startin' Somethin'", "year": "1982", "youtube_id": "3VU8jNp4XqQ"},
+    {"title": "P.Y.T. (Pretty Young Thing)", "year": "1982", "youtube_id": "R6X1_7U2V5k"},
+    {"title": "Human Nature", "year": "1982", "youtube_id": "B4jBnPp7H-w"},
+    {"title": "Leave Me Alone", "year": "1987", "youtube_id": "Uqdmnoz5rns"},
+    {"title": "Liberian Girl", "year": "1987", "youtube_id": "FXPdIuNtSfA"},
 ]
 
-# Display songs in a grid (5 columns)
-cols_per_row = 5
+# Display songs in a grid (4 columns for better layout)
+cols_per_row = 4
 for i in range(0, len(hit_songs), cols_per_row):
     cols = st.columns(cols_per_row)
     for j, col in enumerate(cols):
         if i + j < len(hit_songs):
             song = hit_songs[i + j]
             with col:
-                song_html = f"""
-                <div class="song-card" onclick="window.open('https://www.youtube.com/watch?v={song['youtube_id']}', '_blank')" style="cursor:pointer;">
-                    <div class="song-title">🎵 {song['title']}</div>
-                    <div class="song-year">{song['year']}</div>
-                </div>
-                """
-                st.markdown(song_html, unsafe_allow_html=True)
-                
-                # Button alternative for better UX
-                if st.button(f"▶ {song['title']} ({song['year']})", key=f"song_{i}_{j}"):
-                    youtube_url = f"https://www.youtube.com/watch?v={song['youtube_id']}"
-                    st.markdown(f'<iframe width="100%" height="200" src="https://www.youtube.com/embed/{song["youtube_id"]}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>', unsafe_allow_html=True)
+                if st.button(f"🎵 {song['title']} ({song['year']})", key=f"song_{i}_{j}", use_container_width=True):
+                    st.markdown(f'<iframe width="100%" height="250" src="https://www.youtube.com/embed/{song["youtube_id"]}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>', unsafe_allow_html=True)
 
 # ---------------------------- QUIZ SECTION ----------------------------
 st.markdown("""
@@ -435,6 +402,7 @@ with st.sidebar.expander("📀 Full Discography Highlights"):
 
 # ---------------------------- STATS ----------------------------
 st.sidebar.markdown("---")
-st.sidebar.markdown(f"**🎵 Total Songs in Library:** {len(hit_songs)}")
+st.sidebar.markdown(f"**🎵 Total Hit Songs:** {len(hit_songs)}")
 st.sidebar.markdown("**⭐ King of Pop**")
 st.sidebar.markdown("**🕺 Moonwalk Legend**")
+st.sidebar.markdown("**🎤 6 Musical Eras**")
