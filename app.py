@@ -1,7 +1,7 @@
 # michael_jackson_app.py
 import streamlit as st
 import base64
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import io
 import random
 import time
@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for animations, star effects, and overall styling
+# Custom CSS for animations, star effects, and strong white text
 st.markdown("""
 <style>
     @keyframes spin {
@@ -59,7 +59,7 @@ st.markdown("""
         transform: scale(1.01);
     }
     .section-title {
-        color: #FFD700;
+        color: #FFD700 !important;
         font-size: 32px;
         border-left: 6px solid gold;
         padding-left: 20px;
@@ -74,7 +74,7 @@ st.markdown("""
     .footer {
         text-align: center;
         padding: 30px;
-        color: #aaa;
+        color: #FFFFFF !important;
         font-size: 14px;
     }
     [data-testid="stAppViewContainer"] {
@@ -84,6 +84,75 @@ st.markdown("""
         border-radius: 20px;
         overflow: hidden;
         box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    /* Strong white text for all content */
+    p, li, div, span, h1, h2, h3, h4, .stMarkdown, .stRadio label {
+        color: #FFFFFF !important;
+    }
+    /* Keep gold for titles and special elements */
+    h1, h2, h3, .section-title, .title-main {
+        color: #FFD700 !important;
+    }
+    /* Quiz options white */
+    .stRadio [data-baseweb="radio"] label {
+        color: white !important;
+    }
+    /* Success and info messages */
+    .stSuccess, .stInfo {
+        background-color: #1e1e2f !important;
+        border-left-color: gold !important;
+        color: white !important;
+    }
+    .stSuccess p, .stInfo p {
+        color: white !important;
+    }
+    /* Expander header */
+    .streamlit-expanderHeader {
+        color: #FFD700 !important;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    /* Sidebar text */
+    [data-testid="stSidebar"] {
+        background-color: #0a0a1a;
+    }
+    [data-testid="stSidebar"] * {
+        color: #FFD700 !important;
+    }
+    /* Audio caption */
+    .stAudio caption {
+        color: white !important;
+    }
+    hr {
+        border-color: gold !important;
+    }
+    .quote-text {
+        color: #FFD700 !important;
+        font-style: italic;
+        font-size: 18px;
+    }
+    .era-name {
+        color: #FFD700 !important;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .year-text {
+        color: #FFA500 !important;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .desc-text {
+        color: #FFFFFF !important;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+    .legacy-text {
+        color: white !important;
+        font-size: 20px;
+    }
+    .legacy-stars {
+        color: gold !important;
+        font-size: 18px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -106,20 +175,21 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------- DATA: ERA, IMAGE, TEXT, AUDIO ----------------------------
-# Using local base64 images for demo (since we can't host actual images, we generate colored placeholders with emoji)
-# But to make it visually appealing, we use a mix of base64 data URIs (simulated images) 
-# For real deployment, you would replace with actual image URLs or uploaded files.
-
 def get_image_base64(color, text):
     """Generate a simple colored image with text as base64 (placeholder)"""
     img = Image.new('RGB', (600, 400), color=color)
-    from PIL import ImageDraw, ImageFont
     draw = ImageDraw.Draw(img)
     try:
         font = ImageFont.truetype("arial.ttf", 40)
     except:
         font = ImageFont.load_default()
-    draw.text((150, 180), text, fill="white", font=font)
+    # Get text size and center it
+    bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
+    x = (600 - text_width) // 2
+    y = (400 - text_height) // 2
+    draw.text((x, y), text, fill="white", font=font)
     buffered = io.BytesIO()
     img.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode()
@@ -132,7 +202,7 @@ eras = [
         "image_color": "#8B4513",
         "image_text": "Jackson 5 Era",
         "description": "Michael began his journey at age 6 with his brothers. Hits like 'I Want You Back', 'ABC', and 'I'll Be There' made them Motown legends.",
-        "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",  # royalty-free example
+        "audio_file": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         "quote": "Music was my escape. My parents noticed I could dance and sing."
     },
     {
@@ -182,7 +252,7 @@ eras = [
     }
 ]
 
-# Display each era as an interactive card
+# Display each era as an interactive card with strong white text
 for idx, era in enumerate(eras):
     with st.container():
         st.markdown(f"<div class='journey-card'>", unsafe_allow_html=True)
@@ -190,52 +260,50 @@ for idx, era in enumerate(eras):
         col1, col2 = st.columns([1, 1])
         
         with col1:
-            # Generate image from base64 or use real image if you have URLs
             img_b64 = get_image_base64(era["image_color"], era["image_text"])
             st.markdown(f'<img src="data:image/png;base64,{img_b64}" style="width:100%; border-radius:20px;">', unsafe_allow_html=True)
         
         with col2:
-            st.markdown(f"### {era['name']}")
-            st.markdown(f"**{era['year']}**")
-            st.markdown(f"*{era['description']}*")
-            st.markdown(f"> *\"{era['quote']}\"*")
+            st.markdown(f"<p class='era-name'>{era['name']}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p class='year-text'>{era['year']}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p class='desc-text'>{era['description']}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p class='quote-text'>\"{era['quote']}\"</p>", unsafe_allow_html=True)
             
-            # Audio player
             st.markdown("🎧 **Listen to a sample track (Era vibe)**")
-            audio_bytes = None
-            # For demonstration, we embed audio HTML (since Streamlit's audio supports URLs)
             st.audio(era["audio_file"], format="audio/mp3")
         
         st.markdown("</div>", unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
 
-# Special interactive timeline quiz (fun extra)
+# Special interactive timeline quiz (fun extra) - with white text
 st.markdown("""
 <div class="section-title">🎵 JOURNEY TIMELINE QUIZ 🎵</div>
 """, unsafe_allow_html=True)
 
+# Use st.columns to center the radio options with better visibility
 quiz_q = st.radio(
     "Which Michael Jackson album features 'Billie Jean' and 'Thriller'?",
     ("Off The Wall", "Thriller", "Bad", "Dangerous"),
     index=1,
     horizontal=True
 )
+
 if quiz_q == "Thriller":
     st.success("✅ Correct! 'Thriller' (1982) is the best-selling album of all time! 🎉")
 else:
     st.info("💡 Hint: The album with the iconic red jacket and zombie dance.")
 
-# Add a tribute section
+# Legacy section - all white text
 st.markdown("""
 <div class="section-title">🌟 LEGACY 🌟</div>
 <div style="background:#000000aa; padding:20px; border-radius:20px; text-align:center;">
-    <p style="font-size:20px;">Michael Jackson — The King of Pop — inspired billions with his music, dance, and humanitarian efforts.</p>
-    <p>⭐ 13 Grammy Awards | ⭐ Rock & Roll Hall of Fame (twice) | ⭐ Guinness World Records | ⭐ Heal the World Foundation</p>
-    <p>🎤 <i>"In a world filled with hate, we must still dare to hope. In a world filled with anger, we must still dare to comfort."</i> — MJ</p>
+    <p class="legacy-text">Michael Jackson — The King of Pop — inspired billions with his music, dance, and humanitarian efforts.</p>
+    <p class="legacy-stars">⭐ 13 Grammy Awards | ⭐ Rock & Roll Hall of Fame (twice) | ⭐ Guinness World Records | ⭐ Heal the World Foundation</p>
+    <p class="quote-text">"In a world filled with hate, we must still dare to hope. In a world filled with anger, we must still dare to comfort." — MJ</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Footer
+# Footer with white text
 st.markdown("""
 <div class="footer">
     ⭐ MICHAEL JACKSON MUSIC JOURNEY ⭐<br>
@@ -243,7 +311,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Optional: spinning star effects with random messages on sidebar
+# Sidebar spinning star effects
 st.sidebar.markdown("## ✨ SPINNING STAR MAGIC ✨")
 star_message = st.sidebar.empty()
 for _ in range(5):
@@ -251,9 +319,9 @@ for _ in range(5):
     time.sleep(0.3)
 star_message.markdown("🎤 **Ready to journey?** Click through the eras above!")
 
-# Extra: full discography mini list
+# Full discography mini list with white text
 with st.expander("📀 Full Discography Highlights"):
-    st.write("""
+    st.markdown("""
     - **Got to Be There** (1972)
     - **Ben** (1972)
     - **Off the Wall** (1979)
