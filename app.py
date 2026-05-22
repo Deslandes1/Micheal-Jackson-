@@ -3,7 +3,6 @@ import streamlit as st
 import random
 import time
 import os
-import base64
 
 # ---------------------------- CONFIG ----------------------------
 st.set_page_config(
@@ -13,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS
+# Custom CSS with exact Haitian flag colors
 st.markdown("""
 <style>
     @keyframes spin {
@@ -24,6 +23,11 @@ st.markdown("""
         0% { text-shadow: 0 0 5px gold, 0 0 10px gold; }
         50% { text-shadow: 0 0 20px yellow, 0 0 30px orange; }
         100% { text-shadow: 0 0 5px gold, 0 0 10px gold; }
+    }
+    @keyframes flag-wave {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
     }
     .star-spin {
         display: inline-block;
@@ -65,6 +69,18 @@ st.markdown("""
         transform: scale(1.01);
         border-color: gold;
     }
+    .my-space-card {
+        background: linear-gradient(135deg, #0f3460, #1a1a2e);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 25px 0;
+        border: 2px solid #FFD700;
+        transition: transform 0.3s;
+    }
+    .my-space-card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 20px rgba(255,215,0,0.3);
+    }
     .section-title {
         color: #FFD700 !important;
         font-size: 32px;
@@ -95,6 +111,7 @@ st.markdown("""
         margin-bottom: 30px;
         border: 1px solid gold;
         font-size: 14px;
+        position: relative;
     }
     .creator-bar span {
         color: #FFD700 !important;
@@ -147,7 +164,74 @@ st.markdown("""
         margin-top: 5px;
         font-style: italic;
     }
+    /* Haitian Flag styling - EXACT COLORS */
+    /* Official Haitian Flag Colors:
+       Blue: Imperial Blue - Hex #00209F 
+       Red: Crimson - Hex #D21034  */
+    .haitian-flag {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        width: 90px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,215,0,0.3);
+    }
+    .haitian-flag:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        border-color: gold;
+    }
+    /* Top horizontal band - Imperial Blue #00209F */
+    .flag-top {
+        background: #00209F;
+        height: 35px;
+    }
+    /* Bottom horizontal band - Crimson #D21034 */
+    .flag-bottom {
+        background: #D21034;
+        height: 35px;
+    }
+    .flag-text {
+        text-align: center;
+        font-size: 9px;
+        background: white;
+        color: #00209F;
+        padding: 3px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .haitian-flag {
+            width: 55px;
+            top: 10px;
+            left: 10px;
+        }
+        .flag-top, .flag-bottom {
+            height: 22px;
+        }
+        .flag-text {
+            font-size: 7px;
+            padding: 2px;
+        }
+    }
 </style>
+""", unsafe_allow_html=True)
+
+# ---------------------------- HAITIAN FLAG (TOP LEFT - EXACT COLORS) ----------------------------
+st.markdown("""
+<div class="haitian-flag" onclick="window.open('https://en.wikipedia.org/wiki/Haiti', '_blank')">
+    <div class="flag-top" title="Imperial Blue - Freedom"></div>
+    <div class="flag-bottom" title="Crimson - Unity"></div>
+    <div class="flag-text">🇭🇹 HAITI</div>
+</div>
 """, unsafe_allow_html=True)
 
 # ---------------------------- TEXT-TO-SPEECH FUNCTION ----------------------------
@@ -177,7 +261,6 @@ def text_to_speech_audio(text, song_title):
             
         return audio_bytes
     except Exception as e:
-        st.error(f"Audio generation error for {song_title}: {str(e)}")
         return None
 
 # ---------------------------- CREATOR CREDITS ----------------------------
@@ -299,6 +382,64 @@ for idx, song in enumerate(songs):
         
         st.markdown("</div>", unsafe_allow_html=True)
 
+# ---------------------------- MY SPACE SECTION (YOUR OWN YOUTUBE VIDEOS) ----------------------------
+st.markdown("""
+<div class="section-title">🚀 MY SPACE 🚀</div>
+<p style="text-align:center; margin-bottom:20px;">🎬 Watch my personal videos and projects - GlobalInternet.py 🎬</p>
+<hr>
+""", unsafe_allow_html=True)
+
+# Define your YouTube videos here - Add as many as you want!
+my_videos = [
+    {
+        "title": "New Software Release - Global Security Shield Demo",
+        "description": "Gesner Deslandes from GlobalInternet.py demonstrates the Global Security Shield, protecting websites from SQL injection, XSS, and over 20 attack patterns in real-time. Watch how the shield blocks malicious input instantly and keeps your data safe.",
+        "youtube_id": "dMIKnVCxIn0",
+        "year": "2026"
+    },
+    # Add more of your videos below following the same format:
+    # {
+    #     "title": "Your Video Title",
+    #     "description": "Your video description",
+    #     "youtube_id": "your_youtube_video_id",
+    #     "year": "2026"
+    # },
+]
+
+for idx, video in enumerate(my_videos):
+    with st.container():
+        st.markdown(f"<div class='my-space-card'>", unsafe_allow_html=True)
+        
+        # Two columns for better layout
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.markdown(f"<p class='song-title'>📹 {video['title']}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p class='song-year'>📅 {video['year']}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p class='song-desc'>{video['description']}</p>", unsafe_allow_html=True)
+            
+            # Optional: Add AI voice for your video descriptions too!
+            # audio_bytes = text_to_speech_audio(video['description'], video['title'])
+            # if audio_bytes:
+            #     st.audio(audio_bytes, format="audio/mp3")
+            #     st.caption("🎤 AI Voice - Click play to hear the description")
+        
+        with col2:
+            # Display a thumbnail / preview card
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #FFD70022, #FFA50022); border-radius: 15px; padding: 15px; text-align: center;">
+                <p style="font-size: 48px; margin: 0;">🎬</p>
+                <p style="color: #FFD700; font-weight: bold; margin: 5px 0;">GlobalInternet.py</p>
+                <p style="font-size: 12px; color: #FFA500;">Click video below to play</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # YouTube video player
+        st.markdown(f"**📺 Watch: {video['title']}**")
+        st.video(f"https://www.youtube.com/watch?v={video['youtube_id']}")
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+
 # ---------------------------- QUIZ SECTION ----------------------------
 st.markdown("""
 <div class="section-title">🎵 JOURNEY TIMELINE QUIZ 🎵</div>
@@ -345,7 +486,10 @@ star_message.markdown("🎤 **Ready to journey?** Explore all songs above!")
 
 # ---------------------------- STATS ----------------------------
 st.sidebar.markdown("---")
-st.sidebar.markdown(f"**🎵 Total Songs:** {len(songs)}")
+st.sidebar.markdown(f"**🎵 Total MJ Songs:** {len(songs)}")
+st.sidebar.markdown(f"**📹 My Space Videos:** {len(my_videos)}")
 st.sidebar.markdown("**🎤 AI Female Voice for EVERY song**")
 st.sidebar.markdown("**🎬 All YouTube Videos Working**")
 st.sidebar.markdown("**⭐ King of Pop Legacy**")
+st.sidebar.markdown("**🇭🇹 Proudly Presented from Haiti**")
+st.sidebar.markdown("**🚀 GlobalInternet.py**")
